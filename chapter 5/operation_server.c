@@ -46,15 +46,15 @@ int main(int argc, char * argv[]) {
     
     for(int i = 0; i < 5; i ++) {
         opnd_cnt = 0;
+        recv_len = 0;
         clnt_sock = accept(serv_sock, (struct sockaddr*) &clnt_addr, &clnt_addr_size);
         read(clnt_sock, &opnd_cnt, 1);
         
-        recv_cnt = 0;
         while ((opnd_cnt * OPSZ + 1) > recv_len) {
             recv_cnt = read(clnt_sock, &opinfo[recv_len], BUF_SIZE - 1);
             recv_len += recv_cnt;
         }
-
+        printf("%d \n", recv_len);
         result = calculate(opnd_cnt, (int*) opinfo, opinfo[recv_len - 1]);
         write(clnt_sock, (char*)&result, sizeof(result));
         close(clnt_sock);
